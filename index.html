@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>棧板作業清單回報</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        .vehicle-card { transition: all 0.2s; border-left: 5px solid #e5e7eb; }
+        .vehicle-card.has-data { border-left-color: #3b82f6; background-color: #f0f7ff; }
+    </style>
+</head>
+<body class="bg-gray-100 pb-24">
+
+    <div class="max-w-xl mx-auto p-4">
+        <!-- 頂部標題與日期 -->
+        <div class="bg-white rounded-2xl shadow-sm p-4 mb-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-gray-800">🚛 棧板作業清單</h1>
+            <input type="date" id="global_date" class="border rounded-lg p-1 text-sm font-mono">
+        </div>
+
+        <!-- 車輛清單容器 -->
+        <div id="vehicle_list" class="space-y-3">
+            <!-- 由 JavaScript 自動生成內容 -->
+        </div>
+    </div>
+
+    <!-- 底部固定按鈕區 -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-2xl">
+        <div class="max-w-xl mx-auto grid grid-cols-2 gap-3">
+            <button onclick="copyAll()" class="bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg active:scale-95 transition flex flex-col items-center">
+                <span class="text-lg">📋 全部複製</span>
+                <span class="text-xs font-normal opacity-80">僅包含有填寫數量的車</span>
+            </button>
+            <button onclick="clearAll()" class="bg-gray-100 text-gray-500 font-bold py-3 rounded-xl active:scale-95 transition flex flex-col items-center border">
+                <span class="text-lg">♻️ 全部清空</span>
+                <span class="text-xs font-normal opacity-80">重置所有格子</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const vehicles = [
+            "3PL 幹線(南車)", 
+            "爆量車 1", "爆量車 2", "爆量車 3", 
+            "爆量車 4", "爆量車 5", "爆量車 6"
+        ];
+
+        // 初始化頁面
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('global_date').value = today;
+            
+            const listContainer = document.getElementById('vehicle_list');
+            
+            vehicles.forEach((name, index) => {
+                const card = document.createElement('div');
+                card.id = `card_${index}`;
+                card.className = "vehicle-card bg-white rounded-xl p-4 shadow-sm";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="font-bold text-gray-700">${name}</span>
+                        <button onclick="copySingle(${index})" class="text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded-full border border-blue-200 active:bg-blue-200">單車複製</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-blue-500">⬆️上</span>
+                            <input type="number" id="up_${index}" placeholder="0" oninput="checkData(${index})" class="w-full border-b-2 border-gray-100 focus:border-blue-400 outline-none p-1 text-center font-bold text-lg">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-green-500">⬇️下</span>
+                            <input type="number" id="down_${index}" placeholder="0" oninput="checkData(${index})" class="w-full border-b-2 border-gray-100 focus:border-green-400 outline-none p-1 text-center font-bold text-lg">
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <input type="text" id="note_${index}" placeholder="備註..." oninput="checkData(${index})" class="w-full text-xs text-gray-400 bg-gray-50 p-2 rounded outline-none border-none">
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+        };
+
+        // 檢查是否有輸入數據，改變顏色
+        function checkData(index) {
+            const up = document.getElementById(`up_${index}`).value;
+            const down = document.getElementById(`down_${index}`).value;
+            const card = document.getElementById(`card_${index}`);
+            if (up || down) {
+                card.classList.add('has-data');
+            } else {
+                card.classList.remove('has-data');
+            }
+        }
+
+        // 格式化單台車文字
+        function formatVehicleText(index) {
+            const date = document.getElementById('global_date').value;
+            const name = vehicles[index];
+            const up = document.getElementById(`up_${index}`).value || '0';
+            const down = document.getElementById(`down_${index}`).value || '0';
+            const note = document.getElementById(`note_${index}`).value || '無';
+
+            return `【棧板回報】\n` +
+                   `📅日期：${date}\n` +
+                   `🚚車項：${name}\n` +
+                   `⬆️上貨：${up} 棧\n` +
+                   `⬇️下貨：${down} 棧\n` +
+                   `📝備註：${note}`;
+        }
+
+        // 單車複製
+        function copySingle(index) {
+            const text = formatVehicleText(index);
+            copyToClipboard(text, `✅ 已複製 ${vehicles[index]} 資訊`);
+        }
+
+        // 全部複製
+        function copyAll() {
+            const date = document.getElementById('global_date').value;
+            let allText = `📢【今日棧板作業總報表】\n📅日期：${date}\n━━━━━━━━━━━━\n`;
+            let hasAnyData = false;
+
+            vehicles.forEach((name, index) => {
+                const up = document.getElementById(`up_${index}`).value;
+                const down = document.getElementById(`down_${index}`).value;
+                const note = document.getElementById(`note_${index}`).value || '無';
+
+                if (up || down) {
+                    hasAnyData = true;
+                    allText += `📍${name}\n   上：${up || 0} / 下：${down || 0}\n   備註：${note}\n----------------\n`;
+                }
+            });
+
+            if (!hasAnyData) {
+                alert("❌ 請至少填寫一輛車的數量再進行複製");
+                return;
+            }
+
+            copyToClipboard(allText, "✅ 已複製全部有填寫的資訊");
+        }
+
+        // 底層複製邏輯
+        function copyToClipboard(text, msg) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert(msg);
+        }
+
+        // 全部清空
+        function clearAll() {
+            if(confirm("確定要清空所有已填寫的數量嗎？")) {
+                vehicles.forEach((_, index) => {
+                    document.getElementById(`up_${index}`).value = '';
+                    document.getElementById(`down_${index}`).value = '';
+                    document.getElementById(`note_${index}`).value = '';
+                    document.getElementById(`card_${index}`).classList.remove('has-data');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
