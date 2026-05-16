@@ -48,16 +48,31 @@
             "ES 幹線車", "ES 爆量車 1", "ES 爆量車 2"
         ];
 
+        // 頁面加載時初始化
         window.onload = function() {
+            // 1. 設定日期 (先嘗試從緩存讀取日期，若無則設為今日)
+            const savedDate = localStorage.getItem('pallet_report_date');
             const today = new Date().toLocaleDateString('sv-SE'); 
-            document.getElementById('global_date').value = today;
+            document.getElementById('global_date').value = savedDate || today;
+
+            // 監聽日期變更並存檔
+            document.getElementById('global_date').onchange = function() {
+                localStorage.setItem('pallet_report_date', this.value);
+            };
             
             const listContainer = document.getElementById('vehicle_list');
             
+            // 2. 繪製清單並填入存檔數據
             vehicles.forEach((name, index) => {
                 const card = document.createElement('div');
                 card.id = `card_${index}`;
                 card.className = "vehicle-card bg-white rounded-lg p-3 shadow-sm";
+                
+                // 從 localStorage 讀取舊數據
+                const savedUp = localStorage.getItem(`up_${index}`) || '';
+                const savedDown = localStorage.getItem(`down_${index}`) || '';
+                const savedNote = localStorage.getItem(`note_${index}`) || '';
+
                 card.innerHTML = `
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-sm font-black text-gray-800">${name}</span>
@@ -67,35 +82,49 @@
                     <div class="grid grid-cols-2 gap-2">
                         <!-- 上貨欄位 -->
                         <div class="bg-blue-50 rounded-lg p-1.5 border border-blue-100">
-                            <label class="block text-[10px] font-bold text-blue-600 mb-0.5">⬆️ 上貨棧板</label>
-                            <input type="number" id="up_${index}" placeholder="0" inputmode="numeric" 
-                                oninput="checkData(${index})" 
+                            <label class="block text-[10px] font-bold text-blue-600 mb-0.5">上貨棧板</label>
+                            <input type="number" id="up_${index}" value="${savedUp}" placeholder="0" inputmode="numeric" 
+                                oninput="handleInput(${index})" 
                                 class="w-full bg-transparent text-center font-black text-2xl text-blue-700 outline-none">
                         </div>
                         
                         <!-- 下貨欄位 -->
                         <div class="bg-green-50 rounded-lg p-1.5 border border-green-100">
-                            <label class="block text-[10px] font-bold text-green-600 mb-0.5">⬇️ 下貨棧板</label>
-                            <input type="number" id="down_${index}" placeholder="0" inputmode="numeric" 
-                                oninput="checkData(${index})" 
+                            <label class="block text-[10px] font-bold text-green-600 mb-0.5">下貨棧板</label>
+                            <input type="number" id="down_${index}" value="${savedDown}" placeholder="0" inputmode="numeric" 
+                                oninput="handleInput(${index})" 
                                 class="w-full bg-transparent text-center font-black text-2xl text-green-700 outline-none">
                         </div>
                     </div>
                     
                     <div class="mt-2">
-                        <input type="text" id="note_${index}" placeholder="💡 備註內容..." 
-                            oninput="checkData(${index})" 
+                        <input type="text" id="note_${index}" value="${savedNote}" placeholder="💡 備註內容..." 
+                            oninput="handleInput(${index})" 
                             class="w-full text-xs text-gray-500 bg-gray-50 border-none rounded-md outline-none py-1 px-2 focus:ring-1 focus:ring-blue-200">
                     </div>
                 `;
                 listContainer.appendChild(card);
+                
+                // 初始化檢查卡片顏色狀態
+                if (savedUp !== "" || savedDown !== "") {
+                    card.classList.add('has-data');
+                }
             });
         };
 
-        function checkData(index) {
+        // 處理輸入：存檔 + 檢查顏色
+        function handleInput(index) {
             const up = document.getElementById(`up_${index}`).value;
             const down = document.getElementById(`down_${index}`).value;
+            const note = document.getElementById(`note_${index}`).value;
             const card = document.getElementById(`card_${index}`);
+
+            // 存入 localStorage
+            localStorage.setItem(`up_${index}`, up);
+            localStorage.setItem(`down_${index}`, down);
+            localStorage.setItem(`note_${index}`, note);
+
+            // 更新 UI 顏色
             if (up !== "" || down !== "") {
                 card.classList.add('has-data');
             } else {
@@ -103,18 +132,20 @@
             }
         }
 
+        // 格式化單台車文字
         function formatVehicleText(index) {
             const date = document.getElementById('global_date').value;
             const up = document.getElementById(`up_${index}`).value || '0';
             const down = document.getElementById(`down_${index}`).value || '0';
             const note = document.getElementById(`note_${index}`).value || '無';
-            return `【棧板回報】\n📅日期：${date}\n🚚車項：${vehicles[index]}\n⬆️上貨：${up} 棧\n⬇️下貨：${down} 棧\n📝備註：${note}`;
+            return `【棧板回報】\n📅日期：${date}\n🚚車項：${vehicles[index]}\n⬆️上貨：${up} 板\n⬇️下貨：${down} 板\n📝備註：${note}`;
         }
 
         function copySingle(index) {
             copyToClipboard(formatVehicleText(index), `✅ 已複製 ${vehicles[index]}`);
         }
 
+        // 全部彙整複製
         function copyAll() {
             const date = document.getElementById('global_date').value;
             let allText = `📢【棧板上下貨統計報表】\n📅日期：${date}\n━━━━━━━━━━━━━━\n`;
@@ -126,7 +157,7 @@
                 const note = document.getElementById(`note_${index}`).value || '無';
                 if (up !== "" || down !== "") {
                     hasAnyData = true;
-                    allText += `📍 ${name}\n   上貨：${up || 0} / 下貨：${down || 0}\n   備註：${note}\n----------------------------\n`;
+                    allText += `📍 ${name}\n   上貨：${up || 0} / 下貨：${down || 0} 板\n   備註：${note}\n----------------------------\n`;
                 }
             });
 
@@ -144,14 +175,19 @@
             alert(msg);
         }
 
+        // 重置功能：清空所有欄位與緩存
         function clearAll() {
-            if(confirm("確定要清空所有內容？")) {
+            if(confirm("確定要重置所有內容嗎？這將刪除所有暫存數據。")) {
+                localStorage.clear(); // 清除緩存
                 vehicles.forEach((_, index) => {
                     document.getElementById(`up_${index}`).value = '';
                     document.getElementById(`down_${index}`).value = '';
                     document.getElementById(`note_${index}`).value = '';
                     document.getElementById(`card_${index}`).classList.remove('has-data');
                 });
+                // 重新設定今日日期
+                const today = new Date().toLocaleDateString('sv-SE'); 
+                document.getElementById('global_date').value = today;
                 window.scrollTo({top: 0, behavior: 'smooth'});
             }
         }
