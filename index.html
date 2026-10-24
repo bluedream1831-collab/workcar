@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#142e46"><title>智慧驗收小管家｜效期計算工具 V1.2</title><style>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#142e46"><title>智慧驗收小管家｜效期計算工具 V1.3</title><style>
 :root{--ink:#172f46;--muted:#66798b;--line:#dce4ec;--main:#216e91;--bg:#f3f7fa;--ok:#168064;--warn:#ad6614;--bad:#bb3f4b}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);line-height:1.55}header{background:linear-gradient(120deg,#102b44,#17556c);color:white;padding:25px 18px 30px}.container{max-width:920px;margin:auto}header h1{font-size:clamp(23px,4vw,32px);margin:0 0 8px;letter-spacing:.03em}header p{margin:0;color:#d2e4f0}.eyebrow{letter-spacing:.14em;font-weight:800;font-size:12px;color:#c6e4ef;margin-bottom:7px}main{padding:18px 14px 55px}.panel{border:1px solid var(--line);background:white;border-radius:16px;padding:23px;margin-bottom:15px;box-shadow:0 4px 15px #092e4610}h2{margin:0 0 18px;font-size:19px}h3{font-size:16px;margin:0 0 10px}label{display:block;font-size:14px;font-weight:700;margin-bottom:6px}input,select{width:100%;padding:13px;border:1px solid #b9cad8;border-radius:10px;font-size:16px;background:white;color:var(--ink);outline-color:var(--main)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.field{min-width:0}.wide{grid-column:1/-1}.help{font-size:12px;color:var(--muted);margin:5px 0 0}.choices{display:flex;gap:8px;flex-wrap:wrap}.choice{padding:10px 14px;border:1px solid #bbcad8;border-radius:10px;background:white;color:var(--ink);font-size:14px;font-weight:700;cursor:pointer}.choice.selected{border-color:var(--main);background:#e7f3f8;color:#155775}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:21px}button.primary{background:var(--main);color:white;border:0;border-radius:11px;padding:14px 25px;font-weight:800;font-size:16px;cursor:pointer;flex:1}button.secondary{background:white;border:1px solid #a9bfce;color:var(--ink);border-radius:11px;padding:13px 18px;cursor:pointer;font-size:14px}button:focus-visible{outline:3px solid #73cbe1;outline-offset:2px}.result{display:none}.result.visible{display:block}.status{border-radius:13px;padding:15px 18px;background:#ebf5f4;border-left:5px solid var(--ok);font-weight:800;font-size:18px}.status.fail{background:#fff0f0;border-color:var(--bad);color:var(--bad)}.status.warn{background:#fff5e8;border-color:var(--warn);color:#88530d}.numbers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:15px 0}.metric{background:#f4f8fb;border:1px solid #e0ebf0;border-radius:12px;padding:15px 12px}.metric span{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.metric strong{font-size:clamp(17px,2.8vw,23px);white-space:nowrap}.more{margin-top:14px;font-size:14px}.more div{margin:8px 0}.warning{margin-top:12px;padding:12px 15px;border-radius:10px;background:#fffaef;color:#785313;border:1px solid #efdfba;font-size:14px}.note{color:var(--muted);font-size:13px}.switch{display:flex;align-items:flex-start;gap:9px;margin-top:9px;font-size:14px}.switch input{width:17px;height:17px;margin:3px 0 0}.hide{display:none!important}footer{color:var(--muted);font-size:13px;line-height:1.8;padding:10px 4px}code{word-break:break-all} .pill{font-size:12px;background:#e7f1f6;padding:4px 9px;border-radius:40px;color:#245970;font-weight:700}details{font-size:14px}summary{cursor:pointer;font-weight:750} .toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px} .date-tip{font-size:13px;color:var(--muted)}.day-band{grid-column:1/-1;border:1px solid #b9d2e6;background:#f5faff;padding:15px;border-radius:12px}.day-band .checkrow{display:flex;gap:9px;align-items:flex-start;font-size:14px;font-weight:500;margin-top:12px;line-height:1.5}.day-band .checkrow input{width:18px;height:18px;margin:2px 0 0;flex:0 0 18px}.band-advice{color:#875112;margin-top:8px;font-size:13px}.calc-version{display:inline-block;padding:3px 7px;border-radius:6px;background:#e5f4ff;font-size:12px;color:#245970;font-weight:800}
 
 /* 手機現場操作：大觸控區、清楚欄位、主要數字優先 */
@@ -36,7 +36,12 @@
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
 
-</style></head><body><header><div class="container"><div class="eyebrow">LOCAL • OFFLINE • 日期試算</div><h1>智慧驗收小管家</h1><p>冷凍商品效期計算工具｜正常品・預購品・國產・進口</p></div></header><main class="container"><section class="panel"><div class="toolbar"><h2 style="margin:0">快速驗收試算</h2><span class="pill">免安裝・無須 Token</span></div><div class="grid"><div class="field wide"><p class="segment-title">① 選擇商品</p><label>驗收種類</label><div class="choices" id="types"><button class="choice selected" type="button" data-type="normal">正常品</button><button class="choice" type="button" data-type="preorder">預購品</button></div></div><div class="field wide"><label>商品產地</label><div class="choices" id="origins"><button class="choice selected" type="button" data-origin="domestic">國產</button><button class="choice" type="button" data-origin="imported">進口</button></div></div><div class="field"><label for="received">② 實際收貨日期</label><input type="date" id="received" required><p class="help">預設今天，可手動更改</p></div><div class="field"><label for="shelf">總保存期限</label><div style="display:flex;gap:7px"><input type="number" min="0.5" max="240" step="0.5" id="shelf" value="12" style="flex:1;min-width:0"><select id="shelfUnit" aria-label="保存期限單位" style="flex:0 0 100px"><option value="month">個月</option><option value="day">天</option></select></div><p class="help">以商品包裝明確標示為準；0.5個月＝15天</p></div>
+
+/* V1.3 mobile allergen reference: independent from date calculation. */
+.allergen-panel{scroll-margin-top:18px}.allergen-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:15px}.allergen-heading h2{margin:2px 0 7px}.allergen-topline{color:var(--main);font-size:12px;font-weight:800}.allergen-count{white-space:nowrap;color:#165b7b;background:#eaf3f7;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:800}
+.allergen-highlight{border-left:4px solid #178066;border-radius:11px;background:#edf8f4;padding:14px 16px;margin-bottom:17px}.allergen-highlight strong{font-size:15px}.allergen-highlight p{margin:5px 0 0;font-size:13px;color:#3f625a}.allergen-toolbar label{font-size:14px}.allergen-toolbar input{min-height:51px}.allergen-filters{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.allergen-filter{border:1px solid #b5c8d6;background:#fff;color:#1d516d;border-radius:10px;min-height:45px;padding:8px 13px;font-weight:750;font-size:13px;cursor:pointer;flex:1}.allergen-filter.active{background:#165b7b;border-color:#165b7b;color:#fff}.allergen-match{font-size:12px;color:var(--muted);margin:9px 0 12px}.allergen-list{display:grid;gap:8px}.allergen-card{border:1px solid #d9e5ed;border-radius:12px;background:#fbfdff;overflow:hidden;font-size:14px}.allergen-card>summary{display:flex;align-items:center;gap:10px;padding:13px 13px;min-height:54px;cursor:pointer;list-style:none}.allergen-card>summary::-webkit-details-marker{display:none}.allergen-card>summary:after{content:'⌄';font-size:19px;margin-left:4px;color:#4d6b85}.allergen-card[open]>summary:after{content:'⌃'}.allergen-index{width:26px;height:26px;flex:0 0 26px;background:#eaf3f8;color:#255d79;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12px}.allergen-card-name{flex:1;font-weight:750;min-width:0}.allergen-kind{font-size:11px;color:#536f85;white-space:nowrap}.allergen-content{padding:0 15px 14px;border-top:1px solid #e0eaf0}.allergen-content>div{margin-top:12px}.allergen-content strong{font-size:13px;color:#286280}.allergen-content p{font-size:14px;line-height:1.65;margin:3px 0}.allergen-empty{border:1px dashed #bed1de;border-radius:12px;padding:15px;font-size:14px;color:var(--muted)}.allergen-guidance{margin-top:12px;border:1px solid #d5e2ed;border-radius:12px;padding:0 14px;background:#f8fbfd}.allergen-guidance>summary{padding:13px 0;font-weight:800;min-height:48px}.allergen-guidance-body{border-top:1px solid #dfebf2;padding:5px 0 10px}.allergen-guidance-body p{font-size:14px}.checklist-area{border-top:1px solid #dfebf2;padding:12px 0}.checklist-area>label{display:flex;align-items:flex-start;font-size:14px;font-weight:500;gap:10px;margin:0 0 13px;line-height:1.5}.checklist-area input{width:20px;height:20px;min-width:20px;accent-color:#197e65;margin-top:2px}.checklist-summary{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 10px;color:var(--main);font-weight:750;font-size:14px}.checklist-summary button{border:1px solid #b8ced9;border-radius:9px;background:white;padding:9px;color:var(--ink);font-size:13px;cursor:pointer}.allergen-sources{margin-top:14px;padding-top:12px;border-top:1px solid #dce4ec;display:flex;flex-direction:column;gap:7px;font-size:13px}.allergen-sources strong{font-size:14px}.allergen-sources a{color:#135c84;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}.allergen-sources small{color:var(--muted);line-height:1.6;margin-top:4px}.allergen-quicklink{display:inline-flex;align-items:center;border:1px solid #b2d6e9;color:#fff;text-decoration:none;background:#ffffff1c;padding:9px 13px;border-radius:9px;font-size:13px;font-weight:800;margin-top:14px;min-height:43px}.allergen-quicklink:focus-visible{outline:3px solid #ffe49b} .allergen-card[hidden]{display:none}
+@media(max-width:630px){.allergen-heading{flex-direction:column;gap:6px}.allergen-filter{padding:8px 7px;font-size:12px}.allergen-panel{padding:16px}.allergen-card>summary{padding:12px 10px}.allergen-content{padding:0 12px 12px}}
+</style></head><body><header><div class="container"><div class="eyebrow">LOCAL • OFFLINE • 日期試算</div><h1>智慧驗收小管家</h1><p>冷凍商品效期計算工具｜正常品・預購品・國產・進口</p><a class="allergen-quicklink" href="#allergenReference">查過敏原規範 ↘</a></div></header><main class="container"><section class="panel"><div class="toolbar"><h2 style="margin:0">快速驗收試算</h2><span class="pill">免安裝・無須 Token</span></div><div class="grid"><div class="field wide"><p class="segment-title">① 選擇商品</p><label>驗收種類</label><div class="choices" id="types"><button class="choice selected" type="button" data-type="normal">正常品</button><button class="choice" type="button" data-type="preorder">預購品</button></div></div><div class="field wide"><label>商品產地</label><div class="choices" id="origins"><button class="choice selected" type="button" data-origin="domestic">國產</button><button class="choice" type="button" data-origin="imported">進口</button></div></div><div class="field"><label for="received">② 實際收貨日期</label><input type="date" id="received" required><p class="help">預設今天，可手動更改</p></div><div class="field"><label for="shelf">總保存期限</label><div style="display:flex;gap:7px"><input type="number" min="0.5" max="240" step="0.5" id="shelf" value="12" style="flex:1;min-width:0"><select id="shelfUnit" aria-label="保存期限單位" style="flex:0 0 100px"><option value="month">個月</option><option value="day">天</option></select></div><p class="help">以商品包裝明確標示為準；0.5個月＝15天</p></div>
 <div class="day-band hide" id="dayBandWrap"><label for="dayBand">規章的「總保存期限級距」（天數商品須人工選擇）</label>
 <select id="dayBand" aria-describedby="dayBandHint"><option value="">請選擇規章表適用的級距</option></select>
 <p class="band-advice" id="dayBandHint">例：180天是否屬於「6個月≤T＜7個月」，應依現場確認的規章換算方式選定，不會自動假設180天等於6曆月。</p>
@@ -50,7 +55,98 @@
 </div><div id="monthlyFormula" class="monthly-formula"></div>
 <table class="monthly-table"><thead><tr><th scope="col">月份</th><th scope="col">實際計入日期</th><th scope="col">天數</th></tr></thead><tbody id="monthlyRows"></tbody></table>
 <div class="monthly-total"><span>含起訖日合計</span><strong id="monthlyTotal">—</strong></div>
-<p id="monthlyNote" class="monthly-note"></p></section><div class="actions"><button type="button" id="copy" class="secondary">複製試算結果</button></div></section><section class="panel"><details><summary>計算規則與適用限制</summary><p class="note">以先前核對的正常品／預購品規章表建置：依總保存期限選擇國產／進口之 DC 允收與門市門檻；月數使用曆月倒推，若有半個月先倒推整月、再減15天，最後加1天。天數門檻依實際日曆天倒推後加1天。</p><p class="note">製造日推算有效日採「製造日＋標示保存期限＋1天」。如果有印刷有效日，優先採印刷日；兩者相差一天也標示衝突、停止自動合格判定。</p><p class="note">商品保存期限以天標示時，必須人工選擇並確認適用的總保存期限級距，才會計算該級距的 DC/門市門檻。不預設 30 天等於 1 個曆月，也不自動核准收貨。短效期 D+／半天規則、特殊商品例外尚未納入自動判定。</p><p class="note">淡季放寬只顯示參考日期：冰品 11/1～隔年3/31；巧克力 4/1～10/31，總保存期限超過12個月＋1曆月、12個月以下＋10天；不自動改判。</p></details></section><footer>此工具僅在你的瀏覽器中計算，不需連線、不會上傳商品資料。效期試算不是正式收貨或出貨核准；遇到日期衝突、規章不適用或資料不足時應以人工核對為準。<div>版本：網頁試算 V1.2｜手機大按鈕、實際月份天數明細與＋1天公式｜不包含 OCR、條碼掃描及 Telegram 連線</div></footer></main><div class="mobile-sticky"><button type="button" id="mobileCalculate">立即計算允收・允出</button></div><script>
+<p id="monthlyNote" class="monthly-note"></p></section><div class="actions"><button type="button" id="copy" class="secondary">複製試算結果</button></div></section>
+<section class="panel allergen-panel" id="allergenReference" aria-labelledby="allergenTitle">
+ <div class="allergen-heading"><div><span class="allergen-topline">新品／包材變更時使用</span><h2 id="allergenTitle">食品過敏原規範速查</h2><p class="note">依台灣衛生福利部 107 年公告、109/07/01 生效之過敏原標示規定整理；供現場查表，不參與效期試算。</p></div><span class="allergen-count">11 項強制</span></div>
+ <div class="allergen-highlight"><strong>先核對包裝上的「成分」與「過敏原醒語」</strong><p>市售包裝食品含強制標示之過敏原，應依規定於容器或外包裝標示顯著醒語；亦得於品名完整載明所含全部致過敏性內容物。不能只看到原料名稱就認定標示已完整。</p></div>
+ <div class="allergen-toolbar"><label for="allergenSearch">搜尋過敏原或常見原料</label><input type="search" id="allergenSearch" placeholder="例如：奶粉、芝麻、醬油、魚露、椰子" autocomplete="off"/><div class="allergen-filters" role="group" aria-label="過敏原分類">
+  <button type="button" class="allergen-filter active" data-filter="required" aria-pressed="true">強制標示 11 類</button>
+  <button type="button" class="allergen-filter" data-filter="advisory" aria-pressed="false">建議標示 4 類</button>
+  <button type="button" class="allergen-filter" data-filter="all" aria-pressed="false">全部</button>
+ </div><p id="allergenMatchCount" class="allergen-match" role="status" aria-live="polite">顯示 11 類</p></div>
+ <div class="allergen-list" id="allergenList"><details class="allergen-card" data-kind="required" data-search="甲殼類及其製品 蝦、蟹、蝦米、蝦皮、蝦醬、蟹肉等 包括甲殼類加工製品；與螺貝類不同，螺貝類屬另列建議標示類別。 蝦 蟹 蝦米 蝦皮 蝦醬">
+ <summary><span class="allergen-index">01</span><span class="allergen-card-name">甲殼類及其製品</span><span class="allergen-kind">強制標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>蝦、蟹、蝦米、蝦皮、蝦醬、蟹肉等</p></div><div><strong>注意事項及法定例外</strong><p>包括甲殼類加工製品；與螺貝類不同，螺貝類屬另列建議標示類別。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="required" data-search="芒果及其製品 芒果果肉、芒果乾、芒果醬、芒果風味含真實芒果原料食品 注意果汁、冰品與調味原料；僅憑風味名稱不能判定含有芒果。 芒果 芒果乾 果醬">
+ <summary><span class="allergen-index">02</span><span class="allergen-card-name">芒果及其製品</span><span class="allergen-kind">強制標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>芒果果肉、芒果乾、芒果醬、芒果風味含真實芒果原料食品</p></div><div><strong>注意事項及法定例外</strong><p>注意果汁、冰品與調味原料；僅憑風味名稱不能判定含有芒果。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="required" data-search="花生及其製品 花生仁、花生粉、花生醬、含花生零食 原料或調味粉可能含花生；需核對實際配方。 花生 花生油 花生粉 花生醬">
+ <summary><span class="allergen-index">03</span><span class="allergen-card-name">花生及其製品</span><span class="allergen-kind">強制標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>花生仁、花生粉、花生醬、含花生零食</p></div><div><strong>注意事項及法定例外</strong><p>原料或調味粉可能含花生；需核對實際配方。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="required" data-search="牛奶、羊奶及其製品 奶粉、奶油、起司、乳清、乳糖、酪蛋白鈉（乳來源） 法定例外：由牛奶或羊奶取得的「乳糖醇（lactitol）」。注意「乳糖」並非乳糖醇。 牛奶 羊奶 奶粉 乳清 起司 酪蛋白 乳糖 乳糖醇">
+ <summary><span class="allergen-index">04</span><span class="allergen-card-name">牛奶、羊奶及其製品</span><span class="allergen-kind">強制標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>奶粉、奶油、起司、乳清、乳糖、酪蛋白鈉（乳來源）</p></div><div><strong>注意事項及法定例外</strong><p>法定例外：由牛奶或羊奶取得的「乳糖醇（lactitol）」。注意「乳糖」並非乳糖醇。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="required" data-search="蛋及其製品 雞蛋、鴨蛋、蛋白、蛋黃、蛋粉、白蛋白 料理與糕點的蛋原料也需留意；蛋殼相關衍生物須依原料及製程另行查核。 雞蛋 鴨蛋 蛋白 蛋黃 全蛋 蛋粉">
+ <summary><span class="allergen-index">05</span><span class="allergen-card-name">蛋及其製品</span><span class="allergen-kind">強制標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>雞蛋、鴨蛋、蛋白、蛋黃、蛋粉、白蛋白</p></div><div><strong>注意事項及法定例外</strong><p>料理與糕點的蛋原料也需留意；蛋殼相關衍生物須依原料及製程另行查核。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="required" data-search="堅果類及其製品 杏仁、核桃、腰果、榛果、開心果、夏威夷豆、松子、栗子、椰子等 包含部分堅果油與椰子相關原料；精製例外需依具體原料、製程與主管機關函釋確認，不能一概免標。 堅果 椰子 椰子油 杏仁 腰果 核桃 榛果 開心果">
+ <summary><span class="allergen-index">06</span><span class="allergen-card-name">堅果類及其製品</span><span class="allergen-kind">強制標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>杏仁、核桃、腰果、榛果、開心果、夏威夷豆、松子、栗子、椰子等</p></div><div><strong>注意事項及法定例外</strong><p>包含部分堅果油與椰子相關原料；精製例外需依具體原料、製程與主管機關函釋確認，不能一概免標。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="required" data-search="芝麻及其製品 白芝麻、黑芝麻、芝麻醬、芝麻油、芝麻粉 複合醬料、調味包、烘焙配料常見。 芝麻 芝麻醬 麻油 香油 芝麻粉">
+ <summary><span class="allergen-index">07</span><span class="allergen-card-name">芝麻及其製品</span><span class="allergen-kind">強制標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>白芝麻、黑芝麻、芝麻醬、芝麻油、芝麻粉</p></div><div><strong>注意事項及法定例外</strong><p>複合醬料、調味包、烘焙配料常見。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="required" data-search="含麩質之穀物及其製品 小麥、大麥、黑麥、燕麥及其麵粉、麵包、麵條等 法定例外：由穀類製得的葡萄糖漿、麥芽糊精及酒類。是否適用例外需核實原料來源。 麩質 小麥 大麥 黑麥 燕麥 麵粉 麵包">
+ <summary><span class="allergen-index">08</span><span class="allergen-card-name">含麩質之穀物及其製品</span><span class="allergen-kind">強制標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>小麥、大麥、黑麥、燕麥及其麵粉、麵包、麵條等</p></div><div><strong>注意事項及法定例外</strong><p>法定例外：由穀類製得的葡萄糖漿、麥芽糊精及酒類。是否適用例外需核實原料來源。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="required" data-search="大豆及其製品 黃豆、黑豆、大豆蛋白、豆腐、豆漿、醬油等 法定例外包括特定高度提煉或純化的大豆油（脂）、混合形式生育醇及其衍生物、植物固醇與植物固醇酯。不得把一般大豆油或醬油逕認為例外。 大豆 黃豆 黑豆 醬油 豆漿 豆腐 大豆油">
+ <summary><span class="allergen-index">09</span><span class="allergen-card-name">大豆及其製品</span><span class="allergen-kind">強制標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>黃豆、黑豆、大豆蛋白、豆腐、豆漿、醬油等</p></div><div><strong>注意事項及法定例外</strong><p>法定例外包括特定高度提煉或純化的大豆油（脂）、混合形式生育醇及其衍生物、植物固醇與植物固醇酯。不得把一般大豆油或醬油逕認為例外。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="required" data-search="魚類及其製品 魚肉、魚粉、魚露、魚油及魚類加工製品 法定例外僅限特定魚類明膠用於維生素／類胡蘿蔔素製劑載體或酒類澄清用途；非所有魚明膠都免標。 魚 魚粉 魚露 魚油 明膠">
+ <summary><span class="allergen-index">10</span><span class="allergen-card-name">魚類及其製品</span><span class="allergen-kind">強制標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>魚肉、魚粉、魚露、魚油及魚類加工製品</p></div><div><strong>注意事項及法定例外</strong><p>法定例外僅限特定魚類明膠用於維生素／類胡蘿蔔素製劑載體或酒類澄清用途；非所有魚明膠都免標。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="required" data-search="亞硫酸鹽類（達規定殘留量） 使用亞硫酸鹽類等，終產品以二氧化硫計殘留量每公斤 10 毫克以上 是否達門檻不能單靠成分表或肉眼判定，需核對製造商資料／檢驗結果。常見例如果乾、糖漬食品。 亞硫酸鹽 二氧化硫 so2 果乾 脫水">
+ <summary><span class="allergen-index">11</span><span class="allergen-card-name">亞硫酸鹽類（達規定殘留量）</span><span class="allergen-kind">強制標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>使用亞硫酸鹽類等，終產品以二氧化硫計殘留量每公斤 10 毫克以上</p></div><div><strong>注意事項及法定例外</strong><p>是否達門檻不能單靠成分表或肉眼判定，需核對製造商資料／檢驗結果。常見例如果乾、糖漬食品。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="advisory" data-search="頭足類及其製品 魷魚、花枝、透抽、小卷、章魚及其製品 屬建議標示類別，與強制的甲殼類要分開。 魷魚 花枝 透抽 小卷 章魚">
+ <summary><span class="allergen-index">01</span><span class="allergen-card-name">頭足類及其製品</span><span class="allergen-kind">建議標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>魷魚、花枝、透抽、小卷、章魚及其製品</p></div><div><strong>判讀提醒</strong><p>屬建議標示類別，與強制的甲殼類要分開。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="advisory" data-search="螺貝類及其製品 牡蠣、文蛤、蜆、扇貝、鮑魚、貽貝、螺及其製品 屬建議標示類別，不能自動歸入蝦蟹甲殼類。 螺 貝 牡蠣 文蛤 蜆 扇貝 鮑魚">
+ <summary><span class="allergen-index">02</span><span class="allergen-card-name">螺貝類及其製品</span><span class="allergen-kind">建議標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>牡蠣、文蛤、蜆、扇貝、鮑魚、貽貝、螺及其製品</p></div><div><strong>判讀提醒</strong><p>屬建議標示類別，不能自動歸入蝦蟹甲殼類。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="advisory" data-search="種子類及其製品 葵花籽、瓜子及其製品 法規建議事項提及高度提煉或純化之葵花籽油例外；需依實際原料核對。 種子 葵花籽 瓜子">
+ <summary><span class="allergen-index">03</span><span class="allergen-card-name">種子類及其製品</span><span class="allergen-kind">建議標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>葵花籽、瓜子及其製品</p></div><div><strong>判讀提醒</strong><p>法規建議事項提及高度提煉或純化之葵花籽油例外；需依實際原料核對。</p></div></div>
+ </details>
+<details class="allergen-card" data-kind="advisory" data-search="奇異果及其製品 奇異果、奇異果乾、奇異果醬 屬建議標示類別。 奇異果 奇異果乾">
+ <summary><span class="allergen-index">04</span><span class="allergen-card-name">奇異果及其製品</span><span class="allergen-kind">建議標示</span></summary>
+ <div class="allergen-content"><div><strong>常見原料／產品例子</strong><p>奇異果、奇異果乾、奇異果醬</p></div><div><strong>判讀提醒</strong><p>屬建議標示類別。</p></div></div>
+ </details></div>
+ <p class="allergen-empty hide" id="allergenEmpty">找不到完全相符的項目。請改用原料名稱搜尋，並核對官方規定及供應商文件。</p>
+ <details class="allergen-guidance"><summary>查驗過敏原標示時，還要注意什麼？</summary>
+ <div class="allergen-guidance-body"><p><strong>醒語示例：</strong>「本產品含有牛奶及大豆」、「本產品含有花生，不適合對其過敏體質者食用」或其他等同意義文字。實際應列出產品所含全部適用致過敏內容物。</p>
+ <p><strong>共線交叉接觸：</strong>如果生產設備同時處理其他過敏原，官方另建議適當管制與提醒性標示。不能只靠本工具判斷有無交叉污染。</p>
+ <p><strong>例外需要證據：</strong>高度精製原料及特定加工用途等例外，須核實原料與製程，不要只靠成分名稱自行排除。</p>
+ <p><strong>亞硫酸鹽：</strong>以終產品二氧化硫殘留量計每公斤達 10 毫克以上，才適用該項強制標示門檻；需由可信資料確認。</p></div></details>
+ <details class="allergen-guidance" id="allergenChecklist"><summary>新品／包材變更：人工核對清單（選用）</summary>
+  <div class="checklist-area">
+   <label><input class="allergen-check" type="checkbox"/> 已查看現場實物及完整成分標示</label>
+   <label><input class="allergen-check" type="checkbox"/> 已核對 11 項適用過敏原與警語文字</label>
+   <label><input class="allergen-check" type="checkbox"/> 如涉及例外或亞硫酸鹽，已取得必要佐證／人工確認</label>
+   <label><input class="allergen-check" type="checkbox"/> 已核對新品或變更包材版本與實體一致</label>
+   <div class="checklist-summary"><span id="allergenChecklistProgress">目前勾選 0／4 項</span><button type="button" id="allergenChecklistReset">清空勾選</button></div>
+   <p class="note">勾選只供當下操作提醒；不儲存、不代表已依法核准，也不會改變效期符合狀態。</p>
+  </div>
+ </details>
+ <div class="allergen-sources"><strong>官方參考來源</strong>
+ <a href="https://foodlabel.fda.gov.tw/FdaFrontEndApp/Law/Edit?SystemId=2692d92b-ea65-4640-a17e-aa458a3f54bb" target="_blank" rel="noopener noreferrer">食品過敏原標示規定（衛福部 107 年公告）↗</a>
+ <a href="https://foodlabel.fda.gov.tw/FdaFrontEndApp/Law/Edit?SystemId=4b3b672e-3055-41a8-be76-7acc198d4f5b&key=%E9%A3%9F%E5%93%81%E9%81%8E%E6%95%8F%E5%8E%9F%E6%A8%99%E7%A4%BA%E8%A6%8F%E5%AE%9A" target="_blank" rel="noopener noreferrer">過敏原建議標示事項↗</a>
+ <a href="https://www.fda.gov.tw/TC/newsContent.aspx?cid=4&id=t622859" target="_blank" rel="noopener noreferrer">食藥署標示說明↗</a>
+ <small>資料整理：2026/10/24。規範如有異動，以主管機關最新公告及個案函釋為準。離線可查看本文，但連結需要網路。</small></div>
+</section>
+<section class="panel"><details><summary>計算規則與適用限制</summary><p class="note">以先前核對的正常品／預購品規章表建置：依總保存期限選擇國產／進口之 DC 允收與門市門檻；月數使用曆月倒推，若有半個月先倒推整月、再減15天，最後加1天。天數門檻依實際日曆天倒推後加1天。</p><p class="note">製造日推算有效日採「製造日＋標示保存期限＋1天」。如果有印刷有效日，優先採印刷日；兩者相差一天也標示衝突、停止自動合格判定。</p><p class="note">商品保存期限以天標示時，必須人工選擇並確認適用的總保存期限級距，才會計算該級距的 DC/門市門檻。不預設 30 天等於 1 個曆月，也不自動核准收貨。短效期 D+／半天規則、特殊商品例外尚未納入自動判定。</p><p class="note">淡季放寬只顯示參考日期：冰品 11/1～隔年3/31；巧克力 4/1～10/31，總保存期限超過12個月＋1曆月、12個月以下＋10天；不自動改判。</p></details></section><footer>此工具僅在你的瀏覽器中計算，不需連線、不會上傳商品資料。效期試算不是正式收貨或出貨核准；遇到日期衝突、規章不適用或資料不足時應以人工核對為準。<div>版本：網頁試算 V1.3｜手機大按鈕、月份天數明細、過敏原規範參考及＋1天公式｜不包含 OCR、條碼掃描及 Telegram 連線</div></footer></main><div class="mobile-sticky"><button type="button" id="mobileCalculate">立即計算允收・允出</button></div><script>
 'use strict';
 const normal=[
 [36,null,'25m','18m','21m','18m'],[30,36,'21m','15m','17m','15m'],[24,30,'17m','12m','14m','12m'],[18,24,'13m','9m','10m','9m'],[15,18,'11m','7m','8m','7m'],[12,15,'9m','5m','6m','5m'],[10,12,'7.5m','4.5m','5m','4.5m'],[9,10,'7m','4m','4.5m','4m'],[8,9,'6m','105d','4m','105d'],[7,8,'160d','90d','3.5m','90d'],[6,7,'140d','70d','85d','70d'],[5,6,'4m','60d','70d','60d'],[4,5,'3m','45d','55d','45d'],[3,4,'2m','40d','45d','40d'],[2.5,3,'50d','30d','35d','30d'],[2,2.5,'45d','20d','25d','20d'],[1.5,2,'35d','20d',null,null],[1,1.5,'25d','20d',null,null]
@@ -141,4 +237,40 @@ let last=null,out=null,remain=null;if(rule){last=lastDate(exp,rule[0]);out=lastD
 if(rule&&$('category').value!=='general'&&unit==='day')warn.push('天數保存期限的淡季放寬適用方式尚待核對；本次只使用一般 DC 門檻，未套用淡季放寬。');if(rule&&$('category').value!=='general'&&unit==='month'){const month=recv.getUTCMonth()+1,day=recv.getUTCDate(),ice=$('category').value==='icecream',season=ice?(month>=11||month<=3):month>=4&&month<=10;if(season){const alternate=shelf>12?months(last,1):days(last,10);warn.push(`淡季參考放寬最後允收日：${iso(alternate)}（${shelf>12?'放寬1曆月':'放寬10天'}）。僅顯示參考、不自動改判。`)}}
 if(!rule)status='待人工核對規章門檻';if(!rule)kind='warn';setMonthlyData(exp,rule,last,out);displayResult({status,kind,last:iso(last),outbound:iso(out),remaining:remain===null?'待確認':remain>=0?`剩 ${remain} 天`:`逾 ${-remain} 天`,details:detail,warnings:warn})}
 $('calculate').onclick=calc;$('mobileCalculate').onclick=calc;$('sample').onclick=()=>{setChoice('types','type','type','normal');setChoice('origins','origin','origin','domestic');setChoice('dateMode','mode','mode','exp');$('received').value='2026-10-18';$('expiry').value='2027-10-19';$('shelf').value=12;$('shelfUnit').value='month';updateShelfUI();$('category').value='general';calc()};$('reset').onclick=()=>{setChoice('types','type','type','normal');setChoice('origins','origin','origin','domestic');setChoice('dateMode','mode','mode','exp');$('received').value=new Date(Date.now()+8*3600000).toISOString().slice(0,10);updateDayBands();updateShelfUI();$('expiry').value='';$('manufacture').value='';$('shelf').value=12;$('shelfUnit').value='month';updateShelfUI();$('category').value='general';$('result').classList.remove('visible');setMonthlyData(null,null,null,null)};$('copy').onclick=()=>{if(navigator.clipboard?.writeText)navigator.clipboard.writeText(lastCopy).then(()=>{$('copy').textContent='已複製'}).catch(()=>alert('目前瀏覽器不支援複製，請選取結果複製'));else alert('目前瀏覽器不支援自動複製，請選取文字複製')};$('received').value=new Date(Date.now()+8*3600000).toISOString().slice(0,10);updateDayBands();updateShelfUI();
+</script><script>
+// Reference-only display; no effect on DC/store result and nothing persisted.
+(()=>{
+'use strict';
+const search=document.getElementById('allergenSearch');
+const list=[...document.querySelectorAll('.allergen-card')];
+const filters=[...document.querySelectorAll('.allergen-filter')];
+let filter='required';
+const normalize=t=>String(t).normalize('NFKC').toLowerCase().replace(/\s+/g,'');
+const render=()=>{
+ const words=String(search.value).split(/[,，、\s]+/).map(normalize).filter(Boolean);
+ let shown=0;
+ for(const item of list){
+  const matchesKind=filter==='all'||item.dataset.kind===filter;
+  const hay=normalize(item.dataset.search);
+  const matchesText=words.every(w=>hay.includes(w));
+  const visible=matchesKind&&matchesText;
+  item.hidden=!visible;
+  if(visible)shown++;
+ }
+ document.getElementById('allergenMatchCount').textContent=`顯示 ${shown} 類${words.length?'（符合搜尋）':''}`;
+ document.getElementById('allergenEmpty').classList.toggle('hide',shown!==0);
+};
+search.addEventListener('input',render);
+filters.forEach(button=>button.addEventListener('click',()=>{
+ filter=button.dataset.filter;
+ for(const b of filters){const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))}
+ render();
+}));
+const checks=[...document.querySelectorAll('.allergen-check')];
+const counter=document.getElementById('allergenChecklistProgress');
+function updateCount(){counter.textContent=`目前勾選 ${checks.filter(c=>c.checked).length}／${checks.length} 項（非合格判定）`}
+checks.forEach(c=>c.addEventListener('change',updateCount));
+document.getElementById('allergenChecklistReset').addEventListener('click',()=>{checks.forEach(c=>c.checked=false);updateCount()});
+render();updateCount();
+})();
 </script></body></html>
