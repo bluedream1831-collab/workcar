@@ -1,196 +1,144 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>棧板上下貨統計</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type="number"] { -moz-appearance: textfield; }
-        
-        .vehicle-card { transition: all 0.2s; border-left: 5px solid #e5e7eb; }
-        .vehicle-card.has-data { border-left-color: #2563eb; background-color: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    </style>
-</head>
-<body class="bg-gray-100 pb-28 font-sans">
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#142e46"><title>智慧驗收小管家｜效期計算工具 V1.2</title><style>
+:root{--ink:#172f46;--muted:#66798b;--line:#dce4ec;--main:#216e91;--bg:#f3f7fa;--ok:#168064;--warn:#ad6614;--bad:#bb3f4b}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);line-height:1.55}header{background:linear-gradient(120deg,#102b44,#17556c);color:white;padding:25px 18px 30px}.container{max-width:920px;margin:auto}header h1{font-size:clamp(23px,4vw,32px);margin:0 0 8px;letter-spacing:.03em}header p{margin:0;color:#d2e4f0}.eyebrow{letter-spacing:.14em;font-weight:800;font-size:12px;color:#c6e4ef;margin-bottom:7px}main{padding:18px 14px 55px}.panel{border:1px solid var(--line);background:white;border-radius:16px;padding:23px;margin-bottom:15px;box-shadow:0 4px 15px #092e4610}h2{margin:0 0 18px;font-size:19px}h3{font-size:16px;margin:0 0 10px}label{display:block;font-size:14px;font-weight:700;margin-bottom:6px}input,select{width:100%;padding:13px;border:1px solid #b9cad8;border-radius:10px;font-size:16px;background:white;color:var(--ink);outline-color:var(--main)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.field{min-width:0}.wide{grid-column:1/-1}.help{font-size:12px;color:var(--muted);margin:5px 0 0}.choices{display:flex;gap:8px;flex-wrap:wrap}.choice{padding:10px 14px;border:1px solid #bbcad8;border-radius:10px;background:white;color:var(--ink);font-size:14px;font-weight:700;cursor:pointer}.choice.selected{border-color:var(--main);background:#e7f3f8;color:#155775}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:21px}button.primary{background:var(--main);color:white;border:0;border-radius:11px;padding:14px 25px;font-weight:800;font-size:16px;cursor:pointer;flex:1}button.secondary{background:white;border:1px solid #a9bfce;color:var(--ink);border-radius:11px;padding:13px 18px;cursor:pointer;font-size:14px}button:focus-visible{outline:3px solid #73cbe1;outline-offset:2px}.result{display:none}.result.visible{display:block}.status{border-radius:13px;padding:15px 18px;background:#ebf5f4;border-left:5px solid var(--ok);font-weight:800;font-size:18px}.status.fail{background:#fff0f0;border-color:var(--bad);color:var(--bad)}.status.warn{background:#fff5e8;border-color:var(--warn);color:#88530d}.numbers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:15px 0}.metric{background:#f4f8fb;border:1px solid #e0ebf0;border-radius:12px;padding:15px 12px}.metric span{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.metric strong{font-size:clamp(17px,2.8vw,23px);white-space:nowrap}.more{margin-top:14px;font-size:14px}.more div{margin:8px 0}.warning{margin-top:12px;padding:12px 15px;border-radius:10px;background:#fffaef;color:#785313;border:1px solid #efdfba;font-size:14px}.note{color:var(--muted);font-size:13px}.switch{display:flex;align-items:flex-start;gap:9px;margin-top:9px;font-size:14px}.switch input{width:17px;height:17px;margin:3px 0 0}.hide{display:none!important}footer{color:var(--muted);font-size:13px;line-height:1.8;padding:10px 4px}code{word-break:break-all} .pill{font-size:12px;background:#e7f1f6;padding:4px 9px;border-radius:40px;color:#245970;font-weight:700}details{font-size:14px}summary{cursor:pointer;font-weight:750} .toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px} .date-tip{font-size:13px;color:var(--muted)}.day-band{grid-column:1/-1;border:1px solid #b9d2e6;background:#f5faff;padding:15px;border-radius:12px}.day-band .checkrow{display:flex;gap:9px;align-items:flex-start;font-size:14px;font-weight:500;margin-top:12px;line-height:1.5}.day-band .checkrow input{width:18px;height:18px;margin:2px 0 0;flex:0 0 18px}.band-advice{color:#875112;margin-top:8px;font-size:13px}.calc-version{display:inline-block;padding:3px 7px;border-radius:6px;background:#e5f4ff;font-size:12px;color:#245970;font-weight:800}
 
-    <div class="max-w-md mx-auto p-2">
-        <!-- 標題欄 -->
-        <div class="bg-white rounded-xl shadow-sm p-3 mb-3 flex justify-between items-center border-b-2 border-blue-500">
-            <h1 class="text-base font-bold text-gray-800">🚛 棧板上下貨統計</h1>
-            <input type="date" id="global_date" class="bg-gray-50 rounded px-2 py-1 text-xs font-bold text-blue-600 outline-none border border-gray-200">
-        </div>
+/* 手機現場操作：大觸控區、清楚欄位、主要數字優先 */
+.choice{min-height:48px}.choices .choice{flex:1}.choices .choice.selected{box-shadow:inset 0 0 0 1px var(--main)}
+.field input,.field select{min-height:50px}.segment-title{font-size:13px;font-weight:800;letter-spacing:.02em;color:#28688b;margin:0 0 9px}.field:focus-within label{color:var(--main)}
+.numbers .metric{min-width:0}.monthly{margin-top:19px;border:1px solid #d7e5ec;border-radius:15px;background:#f8fbfd;padding:16px}
+.monthly h3{margin:0 0 5px;font-size:17px}.monthly p{margin:0}.monthly-title{display:flex;align-items:start;justify-content:space-between;gap:8px}
+.monthly-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 12px}
+.monthly-tab{min-height:48px;padding:8px 10px;border-radius:11px;background:#fff;border:1px solid #aec8d8;font-size:14px;font-weight:750;color:#286080;cursor:pointer}
+.monthly-tab.active{background:#165b7b;border-color:#165b7b;color:white}.monthly-tab:focus-visible{outline:3px solid #6db6de;outline-offset:2px}
+.monthly-formula{font-size:14px;font-weight:650;color:#173c55;padding:11px 12px;background:#e9f4f8;border-radius:10px;line-height:1.7;overflow-wrap:anywhere}
+.monthly-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px;table-layout:fixed}
+.monthly-table th{font-size:12px;color:var(--muted);font-weight:700;text-align:left;border-bottom:1px solid var(--line);padding:8px 6px}
+.monthly-table th:last-child,.monthly-table td:last-child{text-align:right;width:73px}
+.monthly-table td{padding:11px 6px;border-bottom:1px solid #e3edf3;vertical-align:middle;font-variant-numeric:tabular-nums}
+.monthly-table th:first-child{width:98px}.monthly-table td strong{font-size:16px;color:#174e70}
+.monthly-date{display:block;font-size:12px;color:var(--muted);line-height:1.35;margin-top:3px}
+.monthly-total{display:flex;align-items:center;justify-content:space-between;padding:12px 6px 0;font-size:15px;font-weight:750}
+.monthly-total strong{font-size:22px;color:#165b7b;font-variant-numeric:tabular-nums}
+.monthly-note{margin-top:9px!important;color:var(--muted);font-size:12px}
+.mobile-sticky{display:none}
+@media(max-width:630px){
+ .grid{grid-template-columns:1fr}.numbers{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .numbers .metric:first-child{grid-column:1/-1;background:#eaf5f9}.metric{padding:14px 12px}.metric strong{font-size:22px;white-space:normal;overflow-wrap:anywhere}
+ .panel{padding:16px;margin-bottom:10px}main{padding:10px 10px 105px}header{padding:16px 16px 19px}header h1{font-size:24px}
+ .toolbar{align-items:start;flex-wrap:wrap}.actions{margin-top:14px}.actions button{width:100%}
+ #types .choice,#origins .choice{flex:1 1 42%}.choice{font-size:15px;padding:11px 10px}
+ #dateMode .choice{flex:1 1 42%}
+ .field{margin:0}.grid{gap:13px}.help{font-size:12px}
+ .monthly{padding:13px 10px}.monthly-table{font-size:13px}.monthly-table th:first-child{width:78px}.monthly-table th:last-child,.monthly-table td:last-child{width:60px}
+ .monthly-table td{padding:10px 4px}.monthly-tab{font-size:13px;padding:6px 4px}
+ .mobile-sticky{display:block;position:fixed;bottom:0;left:0;right:0;background:#fffffff0;backdrop-filter:blur(10px);border-top:1px solid #d8e3ee;z-index:50;padding:9px max(12px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom))}
+ .mobile-sticky button{width:100%;background:#216e91;border:0;color:white;font-size:17px;font-weight:800;border-radius:12px;min-height:50px;box-shadow:0 4px 12px #0d3d5340}
+ #calculate{display:none}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
 
-        <!-- 車輛清單 -->
-        <div id="vehicle_list" class="space-y-2">
-            <!-- JS 生成 -->
-        </div>
-    </div>
+</style></head><body><header><div class="container"><div class="eyebrow">LOCAL • OFFLINE • 日期試算</div><h1>智慧驗收小管家</h1><p>冷凍商品效期計算工具｜正常品・預購品・國產・進口</p></div></header><main class="container"><section class="panel"><div class="toolbar"><h2 style="margin:0">快速驗收試算</h2><span class="pill">免安裝・無須 Token</span></div><div class="grid"><div class="field wide"><p class="segment-title">① 選擇商品</p><label>驗收種類</label><div class="choices" id="types"><button class="choice selected" type="button" data-type="normal">正常品</button><button class="choice" type="button" data-type="preorder">預購品</button></div></div><div class="field wide"><label>商品產地</label><div class="choices" id="origins"><button class="choice selected" type="button" data-origin="domestic">國產</button><button class="choice" type="button" data-origin="imported">進口</button></div></div><div class="field"><label for="received">② 實際收貨日期</label><input type="date" id="received" required><p class="help">預設今天，可手動更改</p></div><div class="field"><label for="shelf">總保存期限</label><div style="display:flex;gap:7px"><input type="number" min="0.5" max="240" step="0.5" id="shelf" value="12" style="flex:1;min-width:0"><select id="shelfUnit" aria-label="保存期限單位" style="flex:0 0 100px"><option value="month">個月</option><option value="day">天</option></select></div><p class="help">以商品包裝明確標示為準；0.5個月＝15天</p></div>
+<div class="day-band hide" id="dayBandWrap"><label for="dayBand">規章的「總保存期限級距」（天數商品須人工選擇）</label>
+<select id="dayBand" aria-describedby="dayBandHint"><option value="">請選擇規章表適用的級距</option></select>
+<p class="band-advice" id="dayBandHint">例：180天是否屬於「6個月≤T＜7個月」，應依現場確認的規章換算方式選定，不會自動假設180天等於6曆月。</p>
+<label class="checkrow"><input type="checkbox" id="confirmBand"><span>我已依現行規章確認上面選擇的級距，了解此結果屬於人工指定級距的日期試算。</span></label></div>
+<div class="field wide"><p class="segment-title">③ 填寫包裝日期</p><label>商品日期資訊</label><div class="choices" id="dateMode"><button class="choice selected" type="button" data-mode="exp">只有有效日期</button><button class="choice" type="button" data-mode="mfg">只有製造日期</button><button class="choice" type="button" data-mode="both">兩者都有</button></div></div><div class="field" id="expfield"><label for="expiry">包裝印刷有效日期</label><input type="date" id="expiry"></div><div class="field hide" id="mfgfield"><label for="manufacture">包裝製造日期</label><input type="date" id="manufacture"><p class="help">推算有效日：製造日＋保存期限＋1天</p></div><div class="field wide"><label for="category">商品類別（人工指定）</label><select id="category"><option value="general">一般商品</option><option value="icecream">冰品（淡季 11/1～3/31）</option><option value="chocolate">巧克力（淡季 4/1～10/31）</option></select></div></div><div class="actions"><button id="calculate" type="button" class="primary">計算允收・允出日期</button><button id="sample" type="button" class="secondary">載入示範</button><button id="reset" type="button" class="secondary">清空</button></div></section><section id="result" class="panel result" aria-live="polite"><h2>效期試算結果</h2><div id="status" class="status">—</div><div class="numbers"><div class="metric"><span>DC 最後允收日</span><strong id="last">—</strong></div><div class="metric"><span>允出參考日（門市門檻）</span><strong id="outbound">—</strong></div><div class="metric"><span>允收剩餘日曆天數</span><strong id="remaining">—</strong></div></div><div class="more" id="details"></div><div id="notices"></div>
+<section id="monthly" class="monthly hide" aria-labelledby="monthlyHeading">
+<div class="monthly-title"><div><h3 id="monthlyHeading">各月份實際計入天數</h3><p class="note">從門檻日算到有效日，<strong>起訖日都計入</strong>。</p></div></div>
+<div class="monthly-tabs" role="group" aria-label="切換驗收與允出日數明細">
+<button class="monthly-tab" type="button" id="tabDc" aria-pressed="false">DC 允收</button>
+<button class="monthly-tab active" type="button" id="tabStore" aria-pressed="true">允出參考</button>
+</div><div id="monthlyFormula" class="monthly-formula"></div>
+<table class="monthly-table"><thead><tr><th scope="col">月份</th><th scope="col">實際計入日期</th><th scope="col">天數</th></tr></thead><tbody id="monthlyRows"></tbody></table>
+<div class="monthly-total"><span>含起訖日合計</span><strong id="monthlyTotal">—</strong></div>
+<p id="monthlyNote" class="monthly-note"></p></section><div class="actions"><button type="button" id="copy" class="secondary">複製試算結果</button></div></section><section class="panel"><details><summary>計算規則與適用限制</summary><p class="note">以先前核對的正常品／預購品規章表建置：依總保存期限選擇國產／進口之 DC 允收與門市門檻；月數使用曆月倒推，若有半個月先倒推整月、再減15天，最後加1天。天數門檻依實際日曆天倒推後加1天。</p><p class="note">製造日推算有效日採「製造日＋標示保存期限＋1天」。如果有印刷有效日，優先採印刷日；兩者相差一天也標示衝突、停止自動合格判定。</p><p class="note">商品保存期限以天標示時，必須人工選擇並確認適用的總保存期限級距，才會計算該級距的 DC/門市門檻。不預設 30 天等於 1 個曆月，也不自動核准收貨。短效期 D+／半天規則、特殊商品例外尚未納入自動判定。</p><p class="note">淡季放寬只顯示參考日期：冰品 11/1～隔年3/31；巧克力 4/1～10/31，總保存期限超過12個月＋1曆月、12個月以下＋10天；不自動改判。</p></details></section><footer>此工具僅在你的瀏覽器中計算，不需連線、不會上傳商品資料。效期試算不是正式收貨或出貨核准；遇到日期衝突、規章不適用或資料不足時應以人工核對為準。<div>版本：網頁試算 V1.2｜手機大按鈕、實際月份天數明細與＋1天公式｜不包含 OCR、條碼掃描及 Telegram 連線</div></footer></main><div class="mobile-sticky"><button type="button" id="mobileCalculate">立即計算允收・允出</button></div><script>
+'use strict';
+const normal=[
+[36,null,'25m','18m','21m','18m'],[30,36,'21m','15m','17m','15m'],[24,30,'17m','12m','14m','12m'],[18,24,'13m','9m','10m','9m'],[15,18,'11m','7m','8m','7m'],[12,15,'9m','5m','6m','5m'],[10,12,'7.5m','4.5m','5m','4.5m'],[9,10,'7m','4m','4.5m','4m'],[8,9,'6m','105d','4m','105d'],[7,8,'160d','90d','3.5m','90d'],[6,7,'140d','70d','85d','70d'],[5,6,'4m','60d','70d','60d'],[4,5,'3m','45d','55d','45d'],[3,4,'2m','40d','45d','40d'],[2.5,3,'50d','30d','35d','30d'],[2,2.5,'45d','20d','25d','20d'],[1.5,2,'35d','20d',null,null],[1,1.5,'25d','20d',null,null]
+];
+const preorder=[
+[36,null,'25m','2m','21m','2m'],[30,36,'21m','2m','17m','2m'],[24,30,'17m','2m','14m','2m'],[18,24,'13m','2m','10m','2m'],[15,18,'11m','2m','8m','2m'],[12,15,'9m','2m','6m','2m'],[10,12,'7.5m','2m','5m','2m'],[9,10,'7m','2m','4.5m','2m'],[8,9,'6m','2m','4m','2m'],[6,8,'140d','1.5m','85d','1.5m'],[3,6,'70d','1m','50d','1m'],[0,3,'30d','0.5m','20d','0.5m']
+];
+const $=id=>document.getElementById(id), DAY=86400000;let type='normal',origin='domestic',mode='exp',lastCopy='';
+function dt(str){if(!/^\d{4}-\d\d-\d\d$/.test(str||''))return null;const [y,m,d]=str.split('-').map(Number);const a=new Date(Date.UTC(y,m-1,d));return a.getUTCFullYear()===y&&a.getUTCMonth()===m-1&&a.getUTCDate()===d?a:null}
+function iso(d){return d?d.toISOString().slice(0,10):'—'}function days(d,n){return new Date(d.getTime()+n*DAY)}function months(d,n){let y=d.getUTCFullYear(),m=d.getUTCMonth()+n;const first=new Date(Date.UTC(y,m,1));let end=new Date(Date.UTC(first.getUTCFullYear(),first.getUTCMonth()+1,0));return new Date(Date.UTC(first.getUTCFullYear(),first.getUTCMonth(),Math.min(d.getUTCDate(),end.getUTCDate())))}
+function lastDate(exp,req){const v=parseFloat(req), unit=req.slice(-1);if(unit==='d')return days(exp,-v+1);const whole=Math.floor(v),rest=(v-whole)*30;return days(months(exp,-whole),-rest+1)}
+function estimate(mfg,shelf,unit){if(unit==='day')return days(mfg,shelf+1);const whole=Math.floor(shelf),half=Math.round((shelf-whole)*2);return days(months(mfg,whole),half*15+1)}
+function fmtBand(row){const min=row[0],max=row[1];return max===null?`T ≥ ${min} 個月`:`${min} ≤ T < ${max} 個月`}
+function updateDayBands(){const select=$('dayBand');const old=select.value;select.replaceChildren();const starter=document.createElement('option');starter.value='';starter.textContent='請選擇規章表適用的級距';select.appendChild(starter);const rows=type==='normal'?normal:preorder;rows.forEach((row,index)=>{const option=document.createElement('option');option.value=String(index);option.textContent=fmtBand(row);select.appendChild(option)});if(old&&Number(old)>=0&&Number(old)<rows.length)select.value=old;else select.value='';$('confirmBand').checked=false}
+function updateShelfUI(){const day=$('shelfUnit').value==='day';$('dayBandWrap').classList.toggle('hide',!day);$('shelf').max=day?'36500':'240';$('shelf').step=day?'1':'0.5';$('shelf').min=day?'1':'0.5';if(!day){$('dayBand').value='';$('confirmBand').checked=false}}
+function textReq(req){return req.endsWith('m')?`${req.slice(0,-1)} 個月`:`${req.slice(0,-1)} 天`}
+// 只按實際日曆逐月切割，起訖日都含在內。無論保存期限以「天」或「曆月」標示均可稽核。
+function monthlyParts(start,end){
+ if(!start||!end||start>end)return [];
+ const parts=[];let cursor=start;
+ while(cursor<=end&&parts.length<3000){
+  const y=cursor.getUTCFullYear(),m=cursor.getUTCMonth();
+  const monthEnd=new Date(Date.UTC(y,m+1,0));
+  const stop=end<monthEnd?end:monthEnd;
+  const count=Math.round((stop-cursor)/DAY)+1;
+  parts.push({year:y,month:m+1,from:iso(cursor),to:iso(stop),count});
+  cursor=days(stop,1);
+ }
+ return parts;
+}
+function thresholdFormula(exp,req,start){
+ const value=parseFloat(req);
+ if(req.endsWith('d'))return `有效日 ${iso(exp)} − ${value} 天 ＋ 1 天 ＝ ${iso(start)}`;
+ const whole=Math.floor(value),half=value-whole>0.01;
+ const deduction=[whole?`${whole} 個曆月`:null,half?'15 天':null].filter(Boolean).join(' − ');
+ return `有效日 ${iso(exp)} − ${deduction} ＋ 1 天 ＝ ${iso(start)}`;
+}
+let breakdownData=null;let breakdownFocus='store';
+function renderMonthly(){
+ const item=breakdownData?.[breakdownFocus];if(!item)return;
+ const $dc=$('tabDc'),$store=$('tabStore');
+ for(const [button,on] of [[$dc,breakdownFocus==='dc'],[$store,breakdownFocus==='store']]){
+  button.classList.toggle('active',on);button.setAttribute('aria-pressed',on?'true':'false');
+ }
+ $('monthlyFormula').textContent=thresholdFormula(breakdownData.exp,item.req,item.start);
+ const parts=monthlyParts(item.start,breakdownData.exp);const rows=$('monthlyRows');rows.replaceChildren();
+ let sum=0;
+ for(const part of parts){
+  const tr=document.createElement('tr');const month=document.createElement('td');month.textContent=`${part.year}/${String(part.month).padStart(2,'0')}`;
+  const range=document.createElement('td');range.textContent=`${part.from.slice(5)} ～ ${part.to.slice(5)}`;
+  const count=document.createElement('td');const strong=document.createElement('strong');strong.textContent=`${part.count} 天`;count.appendChild(strong);
+  tr.append(month,range,count);rows.appendChild(tr);sum+=part.count;
+ }
+ $('monthlyTotal').textContent=`${sum} 天`;
+ const required=Number.parseFloat(item.req);
+ $('monthlyNote').textContent=item.req.endsWith('d')
+ ? `規章門檻：${required} 天；逐月加總 ${sum} 天（應與門檻一致）。${sum!==required?'請重新核對日期計算。':''}`
+ : `規章門檻：${textReq(item.req)}（曆月制）；逐月加總為 ${sum} 個實際日曆天，不代表把月份固定換成 30 天。`;
+}
+$('tabDc').addEventListener('click',()=>{breakdownFocus='dc';renderMonthly()});
+$('tabStore').addEventListener('click',()=>{breakdownFocus='store';renderMonthly()});
+function setMonthlyData(exp,rule,last,out){
+ breakdownData=exp&&rule&&last&&out?{exp,dc:{req:rule[0],start:last},store:{req:rule[1],start:out}}:null;
+ $('monthly').classList.toggle('hide',!breakdownData);
+ if(breakdownData){breakdownFocus='store';renderMonthly()}
+}
 
-    <!-- 底部固定按鈕 -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t p-3 shadow-2xl z-50">
-        <div class="max-w-md mx-auto grid grid-cols-2 gap-3">
-            <button onclick="copyAll()" class="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl shadow-lg active:scale-95 transition flex flex-col items-center">
-                <span class="text-base font-bold">📋 全部彙整複製</span>
-            </button>
-            <button onclick="clearAll()" class="bg-white text-gray-400 py-3 rounded-xl active:scale-95 transition flex flex-col items-center border border-gray-200">
-                <span class="text-base font-bold">♻️ 全部重置</span>
-            </button>
-        </div>
-    </div>
-
-    <script>
-        const vehicles = [
-            "3PL 幹線(南車)", "爆量車 1", "爆量車 2", "爆量車 3", 
-            "爆量車 4", "爆量車 5", "爆量車 6",
-            "ES 幹線車", "ES 爆量車 1", "ES 爆量車 2"
-        ];
-
-        // 頁面加載時初始化
-        window.onload = function() {
-            // 1. 設定日期 (先嘗試從緩存讀取日期，若無則設為今日)
-            const savedDate = localStorage.getItem('pallet_report_date');
-            const today = new Date().toLocaleDateString('sv-SE'); 
-            document.getElementById('global_date').value = savedDate || today;
-
-            // 監聽日期變更並存檔
-            document.getElementById('global_date').onchange = function() {
-                localStorage.setItem('pallet_report_date', this.value);
-            };
-            
-            const listContainer = document.getElementById('vehicle_list');
-            
-            // 2. 繪製清單並填入存檔數據
-            vehicles.forEach((name, index) => {
-                const card = document.createElement('div');
-                card.id = `card_${index}`;
-                card.className = "vehicle-card bg-white rounded-lg p-3 shadow-sm";
-                
-                // 從 localStorage 讀取舊數據
-                const savedUp = localStorage.getItem(`up_${index}`) || '';
-                const savedDown = localStorage.getItem(`down_${index}`) || '';
-                const savedNote = localStorage.getItem(`note_${index}`) || '';
-
-                card.innerHTML = `
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-sm font-black text-gray-800">${name}</span>
-                        <button onclick="copySingle(${index})" class="text-[10px] font-bold bg-gray-100 text-gray-400 px-2 py-0.5 rounded border border-gray-200 active:bg-blue-50">單車複製</button>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-2">
-                        <!-- 上貨欄位 -->
-                        <div class="bg-blue-50 rounded-lg p-1.5 border border-blue-100">
-                            <label class="block text-[10px] font-bold text-blue-600 mb-0.5">上貨棧板</label>
-                            <input type="number" id="up_${index}" value="${savedUp}" placeholder="0" inputmode="numeric" 
-                                oninput="handleInput(${index})" 
-                                class="w-full bg-transparent text-center font-black text-2xl text-blue-700 outline-none">
-                        </div>
-                        
-                        <!-- 下貨欄位 -->
-                        <div class="bg-green-50 rounded-lg p-1.5 border border-green-100">
-                            <label class="block text-[10px] font-bold text-green-600 mb-0.5">下貨棧板</label>
-                            <input type="number" id="down_${index}" value="${savedDown}" placeholder="0" inputmode="numeric" 
-                                oninput="handleInput(${index})" 
-                                class="w-full bg-transparent text-center font-black text-2xl text-green-700 outline-none">
-                        </div>
-                    </div>
-                    
-                    <div class="mt-2">
-                        <input type="text" id="note_${index}" value="${savedNote}" placeholder="💡 備註內容..." 
-                            oninput="handleInput(${index})" 
-                            class="w-full text-xs text-gray-500 bg-gray-50 border-none rounded-md outline-none py-1 px-2 focus:ring-1 focus:ring-blue-200">
-                    </div>
-                `;
-                listContainer.appendChild(card);
-                
-                // 初始化檢查卡片顏色狀態
-                if (savedUp !== "" || savedDown !== "") {
-                    card.classList.add('has-data');
-                }
-            });
-        };
-
-        // 處理輸入：存檔 + 檢查顏色
-        function handleInput(index) {
-            const up = document.getElementById(`up_${index}`).value;
-            const down = document.getElementById(`down_${index}`).value;
-            const note = document.getElementById(`note_${index}`).value;
-            const card = document.getElementById(`card_${index}`);
-
-            // 存入 localStorage
-            localStorage.setItem(`up_${index}`, up);
-            localStorage.setItem(`down_${index}`, down);
-            localStorage.setItem(`note_${index}`, note);
-
-            // 更新 UI 顏色
-            if (up !== "" || down !== "") {
-                card.classList.add('has-data');
-            } else {
-                card.classList.remove('has-data');
-            }
-        }
-
-        // 格式化單台車文字
-        function formatVehicleText(index) {
-            const date = document.getElementById('global_date').value;
-            const up = document.getElementById(`up_${index}`).value || '0';
-            const down = document.getElementById(`down_${index}`).value || '0';
-            const note = document.getElementById(`note_${index}`).value || '無';
-            return `【棧板回報】\n📅日期：${date}\n🚚車項：${vehicles[index]}\n⬆️上貨：${up} 板\n⬇️下貨：${down} 板\n📝備註：${note}`;
-        }
-
-        function copySingle(index) {
-            copyToClipboard(formatVehicleText(index), `✅ 已複製 ${vehicles[index]}`);
-        }
-
-        // 全部彙整複製
-        function copyAll() {
-            const date = document.getElementById('global_date').value;
-            let allText = `📢【棧板上下貨統計報表】\n📅日期：${date}\n━━━━━━━━━━━━━━\n`;
-            let hasAnyData = false;
-
-            vehicles.forEach((name, index) => {
-                const up = document.getElementById(`up_${index}`).value;
-                const down = document.getElementById(`down_${index}`).value;
-                const note = document.getElementById(`note_${index}`).value || '無';
-                if (up !== "" || down !== "") {
-                    hasAnyData = true;
-                    allText += `📍 ${name}\n   上貨：${up || 0} / 下貨：${down || 0} 板\n   備註：${note}\n----------------------------\n`;
-                }
-            });
-
-            if (!hasAnyData) { alert("❌ 請填寫數據"); return; }
-            copyToClipboard(allText, "✅ 已複製彙整報表");
-        }
-
-        function copyToClipboard(text, msg) {
-            const el = document.createElement('textarea');
-            el.value = text;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-            alert(msg);
-        }
-
-        // 重置功能：清空所有欄位與緩存
-        function clearAll() {
-            if(confirm("確定要重置所有內容嗎？這將刪除所有暫存數據。")) {
-                localStorage.clear(); // 清除緩存
-                vehicles.forEach((_, index) => {
-                    document.getElementById(`up_${index}`).value = '';
-                    document.getElementById(`down_${index}`).value = '';
-                    document.getElementById(`note_${index}`).value = '';
-                    document.getElementById(`card_${index}`).classList.remove('has-data');
-                });
-                // 重新設定今日日期
-                const today = new Date().toLocaleDateString('sv-SE'); 
-                document.getElementById('global_date').value = today;
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            }
-        }
-    </script>
-</body>
-</html>
+function setChoice(parent,attribute,key,value){document.querySelectorAll(`#${parent} button`).forEach(b=>b.classList.toggle('selected',b.dataset[attribute]===value));if(key==='type')type=value;if(key==='origin')origin=value;if(key==='mode'){mode=value;$('expfield').classList.toggle('hide',mode==='mfg');$('mfgfield').classList.toggle('hide',mode==='exp')}}
+for(const [id,att,key] of [['types','type','type'],['origins','origin','origin'],['dateMode','mode','mode']])$(id).addEventListener('click',ev=>{const b=ev.target.closest('button');if(b){setChoice(id,att,key,b.dataset[att]);if(key==='type')updateDayBands()}});
+$('shelfUnit').addEventListener('change',updateShelfUI);$('dayBand').addEventListener('change',()=>{$('confirmBand').checked=false});
+function showStatus(name,kind){$('status').textContent=name;$('status').className='status'+(kind==='pass'?'':kind==='fail'?' fail':' warn')}
+function displayResult(r){$('result').classList.add('visible');showStatus(r.status,r.kind);$('last').textContent=r.last||'—';$('outbound').textContent=r.outbound||'—';$('remaining').textContent=r.remaining??'—';$('details').replaceChildren();$('notices').replaceChildren();r.details.forEach(x=>{let node=document.createElement('div');node.textContent=x;$('details').appendChild(node)});r.warnings.forEach(x=>{let node=document.createElement('div');node.className='warning';node.textContent=x;$('notices').appendChild(node)});lastCopy=[`智慧驗收小管家｜效期試算`,r.status,...r.details,`DC最後允收日：${r.last||'待確認'}`,`允出參考日：${r.outbound||'待確認'}`,`允收剩餘天數：${r.remaining??'待確認'}`,...r.warnings,'僅供初篩，非正式准收依據。'].join('\n');$('result').scrollIntoView({behavior:'smooth',block:'start'})}
+function calc(){const recv=dt($('received').value),expIn=mode==='mfg'?null:dt($('expiry').value),mfg=mode==='exp'?null:dt($('manufacture').value),shelf=Number($('shelf').value),unit=$('shelfUnit').value;let warn=[],detail=[],status='需人工確認',kind='warn';if(!recv||!Number.isFinite(shelf)||shelf<=0||shelf>(unit==='day'?36500:240)||unit==='month'&&shelf*2%1!==0||unit==='day'&&shelf%1!==0||mode!=='mfg'&&!expIn||mode!=='exp'&&!mfg){setMonthlyData(null,null,null,null);displayResult({status:'資料不足或格式不正確',kind:'warn',details:[],warnings:['請確認收貨日、保存期限及所選日期欄位都已正確填寫。']});return}
+const inferred=mfg?estimate(mfg,shelf,unit):null;const exp=expIn||inferred;detail.push(`類型：${type==='normal'?'正常品':'預購品'}／${origin==='domestic'?'國產':'進口'}`);detail.push(`實際收貨日：${iso(recv)}；總保存期限：${shelf} ${unit==='month'?'個月':'天'}`);detail.push(`有效日：${iso(exp)}（${expIn?'印刷標示':'由製造日推算，待核對'}）`);if(inferred&&expIn)detail.push(`製造日：${iso(mfg)}；製造日推算有效日：${iso(inferred)}`);if(mfg&&recv<mfg)warn.push('收貨日期早於製造日期，請核對日期。');if(exp<recv)warn.push('商品已超過有效日期，應立即人工確認。');let conflict=!!(inferred&&expIn&&iso(inferred)!==iso(expIn));if(conflict)warn.push(`印刷有效日與製造日推算相差 ${Math.round(Math.abs((inferred-expIn)/DAY))} 天；以印刷有效日呈現，但不得自動判定合格。`);if(!expIn)warn.push('目前只有製造日，推算有效日尚未與包裝印刷有效日核對，不得視為已完整通過。');
+let rule=null,selectedRow=null,manualBand=false;
+if(unit==='month'){
+ selectedRow=(type==='normal'?normal:preorder).find(a=>shelf>=a[0]&&(a[1]===null||shelf<a[1]));
+}else{
+ const chosen=$('dayBand').value;
+ if(chosen==='')warn.push('保存期限以天標示，請先選擇適用的規章級距（不自動將天數換算成月）。');
+ else if(!$('confirmBand').checked)warn.push('請勾選「已確認規章級距」，才會依所選級距計算。');
+ else{const rows=type==='normal'?normal:preorder;selectedRow=rows[Number(chosen)]||null;manualBand=true;
+ if(selectedRow){detail.push(`人工確認的規章級距：${fmtBand(selectedRow)}`);warn.push('本次採人工選定的規章級距試算，並未自動認定保存天數等於某個曆月級距；現場仍應核對適用標準。')}}
+}
+if(selectedRow){const j=origin==='domestic'?2:4;if(selectedRow[j]&&selectedRow[j+1])rule=[selectedRow[j],selectedRow[j+1]]}
+if(!rule)warn.push('規章級距未確認或該級距／產地沒有完整可計算門檻（可能涉及短效期或特殊規定），請人工核對。');
+let last=null,out=null,remain=null;if(rule){last=lastDate(exp,rule[0]);out=lastDate(exp,rule[1]);remain=Math.round((last-recv)/DAY);detail.push(`DC 規章剩餘期限：${textReq(rule[0])}；門市剩餘期限：${textReq(rule[1])}`);if(mfg&&recv<mfg||conflict||!expIn){status='待人工確認';kind='warn'}else if(remain<0){status=`效期不符｜超過允收期限 ${Math.abs(remain)} 天`;kind='fail'}else if(remain===0){status='效期符合｜今天是最後允收日';kind='pass'}else if(remain<=3){status=`效期符合｜接近允收期限（剩餘 ${remain} 天）`;kind='pass'}else{status='效期符合｜日期門檻通過';kind='pass'}if(manualBand&&kind==='pass')status+='（人工級距）'}
+if(rule&&$('category').value!=='general'&&unit==='day')warn.push('天數保存期限的淡季放寬適用方式尚待核對；本次只使用一般 DC 門檻，未套用淡季放寬。');if(rule&&$('category').value!=='general'&&unit==='month'){const month=recv.getUTCMonth()+1,day=recv.getUTCDate(),ice=$('category').value==='icecream',season=ice?(month>=11||month<=3):month>=4&&month<=10;if(season){const alternate=shelf>12?months(last,1):days(last,10);warn.push(`淡季參考放寬最後允收日：${iso(alternate)}（${shelf>12?'放寬1曆月':'放寬10天'}）。僅顯示參考、不自動改判。`)}}
+if(!rule)status='待人工核對規章門檻';if(!rule)kind='warn';setMonthlyData(exp,rule,last,out);displayResult({status,kind,last:iso(last),outbound:iso(out),remaining:remain===null?'待確認':remain>=0?`剩 ${remain} 天`:`逾 ${-remain} 天`,details:detail,warnings:warn})}
+$('calculate').onclick=calc;$('mobileCalculate').onclick=calc;$('sample').onclick=()=>{setChoice('types','type','type','normal');setChoice('origins','origin','origin','domestic');setChoice('dateMode','mode','mode','exp');$('received').value='2026-10-18';$('expiry').value='2027-10-19';$('shelf').value=12;$('shelfUnit').value='month';updateShelfUI();$('category').value='general';calc()};$('reset').onclick=()=>{setChoice('types','type','type','normal');setChoice('origins','origin','origin','domestic');setChoice('dateMode','mode','mode','exp');$('received').value=new Date(Date.now()+8*3600000).toISOString().slice(0,10);updateDayBands();updateShelfUI();$('expiry').value='';$('manufacture').value='';$('shelf').value=12;$('shelfUnit').value='month';updateShelfUI();$('category').value='general';$('result').classList.remove('visible');setMonthlyData(null,null,null,null)};$('copy').onclick=()=>{if(navigator.clipboard?.writeText)navigator.clipboard.writeText(lastCopy).then(()=>{$('copy').textContent='已複製'}).catch(()=>alert('目前瀏覽器不支援複製，請選取結果複製'));else alert('目前瀏覽器不支援自動複製，請選取文字複製')};$('received').value=new Date(Date.now()+8*3600000).toISOString().slice(0,10);updateDayBands();updateShelfUI();
+</script></body></html>
